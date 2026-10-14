@@ -1718,5 +1718,34 @@
   layout();
 })();
 </script>
+
+<!-- Home button: back to this app's start page -->
+<style>
+#poc-home-btn{position:fixed;top:14px;left:14px;z-index:2147483000;display:none;align-items:center;gap:6px;
+  padding:8px 16px;border:none;border-radius:999px;background:#2E7B8D;color:#fff;cursor:pointer;
+  font:700 15px/1 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;box-shadow:0 6px 16px -6px rgba(29,92,90,.55);
+  transition:background .2s ease,transform .2s ease}
+#poc-home-btn:hover{background:#1D5C5A;transform:translateY(-1px)}
+#poc-home-btn:focus-visible{outline:3px solid #49E8CC;outline-offset:2px}
+#poc-home-btn span{font-size:18px;line-height:1}
+html.poc-has-home body{padding-top:56px!important}
+@media print{#poc-home-btn{display:none!important}html.poc-has-home body{padding-top:0!important}}
+</style>
+<button type="button" id="poc-home-btn" aria-label="Home: back to the start page" title="Back to the start page"><span aria-hidden="true">&#8962;</span>Home</button>
+<script>
+(function(){
+  var btn = document.getElementById('poc-home-btn');
+  function onStartPage(){ try { return !(document.getElementById('hero-landing').classList.contains('hidden-layout-state')); } catch(e){ return true; } }
+  function refresh(){ var home = onStartPage(); btn.style.display = home ? 'none' : 'inline-flex'; document.documentElement.classList.toggle('poc-has-home', !home); }
+  btn.addEventListener('click', function(){
+    try { if (window.speechSynthesis) speechSynthesis.cancel(); } catch(e){}
+    try { document.querySelectorAll('audio,video').forEach(function(m){ m.pause(); }); } catch(e){}
+    try { document.getElementById('hero-landing').classList.remove('hidden-layout-state'); document.getElementById('main-app-content').classList.add('hidden-layout-state'); } catch(e){}
+    window.scrollTo(0, 0); refresh();
+  });
+  document.addEventListener('click', function(){ setTimeout(refresh, 0); }, true);
+  setInterval(refresh, 600); refresh();
+})();
+</script>
 </body>
 </html>
